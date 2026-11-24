@@ -132,7 +132,7 @@ export class Input {
     if (down) this.lastDevice = 'keyboard';
     if (act) {
       // Keep arrows and space from scrolling the host page while the game has focus.
-      if (this.playing || act !== 'pause') e.preventDefault();
+      if (this.playing) e.preventDefault();
       if (down) {
         if (!e.repeat && !this.keys.has(e.code)) {
           if (act === 'nudge') this.queueNudge(0);
