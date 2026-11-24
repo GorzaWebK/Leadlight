@@ -6,7 +6,7 @@ import { mix, rgba, saturate } from './colour.js';
 import { mulberry32 } from '../rng.js';
 import { drawBackdrop, drawFrame, drawFloor, drawCellar } from './stone.js';
 
-export const LAYER_RECT = { x0: -240, y0: -240, x1: 880, y1: 1430 };
+export const LAYER_RECT = { x0: -240, y0: -420, x1: 880, y1: 1430 };
 const MAX_PIXELS = 6.5e6;
 
 let TEX = null;
@@ -87,8 +87,9 @@ export class GlassLayer {
     const pal = def.palette;
     const dusk = '#241d4a';
     this.styles = pal.map((c) => {
-      const deep = saturate(c, 0.25);
+      const deep = mix(saturate(c, 0.3), '#0a0410', 0.12);
       return {
+        base: deep,
         lit: rgba(deep),
         litHot: rgba(mix(deep, '#fff3d0', 0.42)),
         litMid: rgba(mix(deep, '#fff0c8', 0.12)),
@@ -163,6 +164,7 @@ export class GlassLayer {
       const nb = Math.floor(p.area / 1400 + r() * 2);
       for (let i = 0; i < nb; i++) p.bubbles.push([p.x0 + r() * (p.x1 - p.x0), p.y0 + r() * (p.y1 - p.y0), 0.8 + r() * 1.8]);
       p.hot = [(r() - 0.5) * 0.5, -0.25 - r() * 0.3];
+      p.tone = (r() - 0.5) * 0.36;
     }
     this.outline = new Path2D();
     def.outline.forEach(([x, y], i) => (i ? this.outline.lineTo(x, y) : this.outline.moveTo(x, y)));
@@ -194,10 +196,13 @@ export class GlassLayer {
     const hy = p.cy + p.hot[1] * size;
     const grad = g.createRadialGradient(hx, hy, size * 0.04, p.cx, p.cy, size * 0.95);
     if (lit) {
-      grad.addColorStop(0, st.litHot);
-      grad.addColorStop(0.35, st.litMid);
-      grad.addColorStop(0.75, st.lit);
-      grad.addColorStop(1, st.litEdge);
+      // Each pane is its own piece of glass: a little lighter or deeper than its neighbours.
+      const t = p.tone;
+      const base = t > 0 ? mix(st.base, '#fff4dc', t * 0.6) : mix(st.base, '#0a0410', -t);
+      grad.addColorStop(0, rgba(mix(base, '#fff3d6', 0.28)));
+      grad.addColorStop(0.3, rgba(mix(base, '#ffeccc', 0.1)));
+      grad.addColorStop(0.72, rgba(base));
+      grad.addColorStop(1, rgba(mix(base, '#10030f', 0.58)));
     } else {
       grad.addColorStop(0, st.darkHot);
       grad.addColorStop(0.6, st.dark);

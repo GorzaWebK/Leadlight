@@ -23,6 +23,31 @@ function grain(g, x, y, w, h, alpha = 0.45) {
   g.restore();
 }
 
+/** A tile of plain masonry for the wall beyond the window layer (very wide or pulled-back views). */
+export function masonryTile() {
+  const c = document.createElement('canvas');
+  c.width = 460;
+  c.height = 276;
+  const g = c.getContext('2d');
+  const rnd = mulberry32(23);
+  g.fillStyle = '#0d0b1a';
+  g.fillRect(0, 0, c.width, c.height);
+  const course = 46;
+  for (let row = 0; row < 6; row++) {
+    const y = row * course;
+    const off = row % 2 ? 115 : 0;
+    for (let k = -1; k < 4; k++) {
+      const x = off + k * 115;
+      g.fillStyle = rgba(mix('#120f24', '#1b1732', rnd()));
+      g.fillRect(x + 1.5, y + 1.5, 112, course - 3);
+      g.fillStyle = 'rgba(140,125,200,0.06)';
+      g.fillRect(x + 1.5, y + 1.5, 112, 2);
+    }
+  }
+  grain(g, 0, 0, c.width, c.height, 0.45);
+  return c;
+}
+
 export function drawBackdrop(g, def, R) {
   const rnd = mulberry32(17);
   const W = R.x1 - R.x0;

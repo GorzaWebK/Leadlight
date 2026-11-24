@@ -11,7 +11,7 @@ export default {
   numeral: 'I',
   epithet: 'The Lancet of First Light',
   blurb: 'Three bells hang in the arch. Ring all three while they still swing to sound the Angelus.',
-  palette: ['#e8901a', '#d0345c', '#f0bd3c', '#3558c8', '#ec6f3f', '#f3d896'],
+  palette: ['#e08a16', '#c82a52', '#e8b030', '#2c4fc0', '#e2602e', '#efcf86'],
   sky: '#f2a24a', // the light behind the glass
   arch,
   outline: glassOutline(arch),
@@ -56,7 +56,7 @@ export default {
       rings: [{ r: 34, n: 1 }, { r: 84, n: 8 }, { r: 150, n: 16 }],
       outer: { r: 700, n: 16 },
       clip: [[0, 1, 470]],
-      colour: ({ ring, sector }) => [[2], [1, 0], [3, 4], [5, 3]][ring][sector % [1, 2, 2, 2][ring]],
+      colour: ({ ring, sector }) => [[2], [1, 0], [3, 4, 3, 1], [3, 1, 3, 5]][ring][sector % [1, 2, 4, 4][ring]],
     },
     {
       type: 'lancets',
@@ -64,7 +64,7 @@ export default {
       rows: [470, 532, 594, 656, 718, 780, 842, 905],
       stagger: 31,
       clip: [[0, -1, -470]],
-      colour: ({ col, row }) => ((row + 6) % 3 === 1 ? 5 : [3, 1, 0, 0, 1, 3][col]),
+      colour: ({ col, row }) => ((row + 6) % 4 === 1 ? [3, 2, 1, 1, 2, 3][col] : (row + 6) % 2 ? [1, 3, 3, 3, 3, 1][col] : [3, 1, 0, 0, 1, 3][col]),
     },
   ],
 };

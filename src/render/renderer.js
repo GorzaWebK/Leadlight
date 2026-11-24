@@ -4,6 +4,7 @@ import { FixtureArt, glowAt } from './fixtures.js';
 import { Effects } from './effects.js';
 import { glowSprite, makeCanvas } from './sprites.js';
 import { rgba, mix } from './colour.js';
+import { masonryTile } from './stone.js';
 import { LANE_X, RIGHT, LANE_TOP, TABLE_H } from '../tables/common.js';
 
 const VIEW = { x0: -8, y0: -4, x1: 648, y1: 1086 }; // the table as framed during play
@@ -274,6 +275,14 @@ export class Renderer {
     g.setTransform(s, 0, 0, s, tx, ty);
     g.imageSmoothingEnabled = true;
     const R = LAYER_RECT;
+    // Plain masonry wherever the view reaches past the window layer.
+    const [vx0, vy0] = this.screenToWorld(0, 0);
+    const [vx1, vy1] = this.screenToWorld(this.cssW, this.cssH);
+    if (vx0 < R.x0 || vy0 < R.y0 || vx1 > R.x1 || vy1 > R.y1) {
+      if (!this.wallPattern) this.wallPattern = g.createPattern(masonryTile(), 'repeat');
+      g.fillStyle = this.wallPattern;
+      g.fillRect(vx0 - 50, vy0 - 50, vx1 - vx0 + 100, vy1 - vy0 + 100);
+    }
     // Masonry continues beyond the cached layer on very wide screens.
     g.drawImage(this.glass.canvas, R.x0, R.y0, R.x1 - R.x0, R.y1 - R.y0);
     const lit = game ? game.light.fraction : 1;

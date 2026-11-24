@@ -343,30 +343,47 @@ export class FixtureArt {
     g.translate(bx, by);
     g.rotate(-p.th);
     const r = p.r;
-    g.fillStyle = 'rgba(0,0,0,0.4)';
-    g.beginPath();
-    g.arc(3, 4, r, 0, TAU);
-    g.fill();
-    // Bell body: crown, waist, flared lip (seen from above it's mostly a disc).
-    const bg = g.createRadialGradient(-r * 0.35, -r * 0.4, r * 0.1, 0, 0, r * 1.05);
-    bg.addColorStop(0, rgba(mix('#f0c98a', '#ffffff', f * 0.5)));
-    bg.addColorStop(0.5, rgba(mix(STONE.bronze, '#ffd27a', f * 0.5)));
-    bg.addColorStop(1, '#3a2512');
-    g.fillStyle = bg;
-    g.beginPath();
-    g.arc(0, 0, r, 0, TAU);
-    g.fill();
-    g.strokeStyle = 'rgba(40,25,10,0.8)';
-    g.lineWidth = 1.5;
-    for (const k of [0.82, 0.55]) {
+    // A bronze bell seen from the side: crown, waist and flared lip, mouth down the table.
+    const shape = () => {
       g.beginPath();
-      g.arc(0, 0, r * k, 0, TAU);
+      g.moveTo(-r * 0.32, -r * 0.95);
+      g.quadraticCurveTo(0, -r * 1.12, r * 0.32, -r * 0.95);
+      g.bezierCurveTo(r * 0.62, -r * 0.6, r * 0.55, r * 0.25, r * 1.02, r * 0.78);
+      g.quadraticCurveTo(0, r * 1.0, -r * 1.02, r * 0.78);
+      g.bezierCurveTo(-r * 0.55, r * 0.25, -r * 0.62, -r * 0.6, -r * 0.32, -r * 0.95);
+      g.closePath();
+    };
+    g.save();
+    g.translate(3, 4);
+    shape();
+    g.fillStyle = 'rgba(0,0,0,0.4)';
+    g.fill();
+    g.restore();
+    shape();
+    const bg = g.createLinearGradient(-r, 0, r, 0);
+    bg.addColorStop(0, '#3a2512');
+    bg.addColorStop(0.3, rgba(mix('#e2b06a', '#fff4d0', f * 0.6)));
+    bg.addColorStop(0.55, rgba(mix(STONE.bronze, '#ffd27a', f * 0.5)));
+    bg.addColorStop(1, '#2a1a0c');
+    g.fillStyle = bg;
+    g.fill();
+    g.strokeStyle = 'rgba(30,18,6,0.9)';
+    g.lineWidth = 1.4;
+    g.stroke();
+    // Bands cast round the bell.
+    g.strokeStyle = 'rgba(255,225,160,0.35)';
+    g.lineWidth = 1.2;
+    for (const k of [-0.45, 0.42]) {
+      g.beginPath();
+      const w = k < 0 ? 0.5 : 0.82;
+      g.moveTo(-r * w, r * k);
+      g.quadraticCurveTo(0, r * (k + 0.1), r * w, r * k);
       g.stroke();
     }
-    // The clapper.
-    g.fillStyle = '#2a1a0c';
+    // The clapper swings a little behind the bell.
+    g.fillStyle = '#1e1208';
     g.beginPath();
-    g.arc(Math.sin(p.th * 3) * r * 0.25, 0, r * 0.22, 0, TAU);
+    g.arc(Math.sin(p.th * 2.5) * r * 0.35, r * 0.95, r * 0.2, 0, TAU);
     g.fill();
     g.restore();
     const ringing = B.swingTime > 0;
