@@ -685,10 +685,15 @@ export class Game {
     if (!K.charged || this.tilted || b.vy < 0) return;
     K.charged = false;
     K.flash = 1;
-    b.vx = 0;
-    b.vy = -1900;
-    b.x = K.x;
-    this.emit({ type: 'kickback', x: K.x, y: K.y, side: K.side });
+    // The pilgrim's light is carried back to the top of the outlane and sent inwards.
+    const left = K.side === 'left';
+    const from = { x: b.x, y: b.y };
+    b.x = left ? 44 : 2 * 299 - 44;
+    b.y = 690;
+    b.vx = left ? 520 : -520;
+    b.vy = -1500;
+    b.inside.clear();
+    this.emit({ type: 'kickback', x: from.x, y: from.y, toX: b.x, toY: b.y, side: K.side });
   }
 
   comboCheck() {
