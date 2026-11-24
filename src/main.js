@@ -1,12 +1,12 @@
 // Start-up, the main loop and the flow between menus, windows and runs.
-import '@fontsource/cormorant-garamond/500.css';
-import '@fontsource/cormorant-garamond/600.css';
-import '@fontsource/cormorant-garamond/700.css';
-import '@fontsource/cormorant-garamond/500-italic.css';
-import '@fontsource/cormorant-garamond/600-italic.css';
-import '@fontsource/spectral/400.css';
-import '@fontsource/spectral/500.css';
-import '@fontsource/spectral/400-italic.css';
+import '@fontsource/cormorant-garamond/latin-500.css';
+import '@fontsource/cormorant-garamond/latin-600.css';
+import '@fontsource/cormorant-garamond/latin-700.css';
+import '@fontsource/cormorant-garamond/latin-500-italic.css';
+import '@fontsource/cormorant-garamond/latin-600-italic.css';
+import '@fontsource/spectral/latin-400.css';
+import '@fontsource/spectral/latin-500.css';
+import '@fontsource/spectral/latin-400-italic.css';
 import './ui/style.css';
 import { TABLES, TABLE_BY_ID } from './tables/index.js';
 import { Game } from './game/game.js';
@@ -42,6 +42,7 @@ let pendingPanes = 0;
 let resetArmed = false;
 let shownTouchHint = false;
 let timers = [];
+let dprCap = 2; // lowered if the device can't keep up
 
 const later = (secs, fn) => timers.push({ t: secs, fn });
 const fmt = (n) => Math.round(n).toLocaleString('en-GB');
@@ -415,7 +416,7 @@ for (const ev of ['pointerdown', 'touchend', 'keydown']) window.addEventListener
 function layout() {
   const w = root.clientWidth || 1;
   const h = root.clientHeight || 1;
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const dpr = Math.min(window.devicePixelRatio || 1, 2, dprCap);
   const TW = 656;
   const TH = 1090;
   const tableW = (h * TW) / TH;
@@ -471,10 +472,16 @@ function loop(now) {
   else renderer.frame(0);
   // Drop the layer resolution a notch if frames are consistently slow.
   slowFrames = dt > 0.024 ? slowFrames + 1 : Math.max(0, slowFrames - 1);
-  if (slowFrames > 90 && renderer.quality > 0.6) {
-    renderer.quality -= 0.15;
+  // Weak devices: first draw fewer pixels on screen, then a coarser window layer.
+  if (slowFrames > 90 && mode === 'play') {
     slowFrames = 0;
-    renderer.rebuildGlass();
+    if (dprCap > 1.01 && (window.devicePixelRatio || 1) > 1) {
+      dprCap = Math.max(1, Math.min(window.devicePixelRatio || 1, 2) - 0.5);
+      layout();
+    } else if (renderer.quality > 0.6) {
+      renderer.quality -= 0.15;
+      renderer.rebuildGlass();
+    }
   }
   requestAnimationFrame(loop);
 }

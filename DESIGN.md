@@ -73,3 +73,23 @@ Added as they were made.
 - **Single window** has no relics. When you finish the window it dims again in a sweep and the next lighting is worth more ("Gloria" level ×2, ×3…), so scores can keep climbing.
 - **Unlocks.** Ten relics are available from the start; six unlock through play. In single-window mode a window is open once you've reached it in a run (Dawn always is); `?unlock=all` opens everything for testing.
 - **Vite base** is `'./'` (relative), like the other games: it works at `https://<user>.github.io/Leadlight/`, in any subfolder and in an iframe.
+
+### Added while building
+
+- **Which window gets which feature.** Dawn: three swinging bells (a gentle first feature). Saints: the rotating rosette, read as a wheel of six haloes. Orchard: the hidden lower chamber, a root cellar below the window. Tempest: wind. Rose: all four.
+- **Shapes.** Dawn is a lancet, Saints a four-centred Tudor arch (wide and low, which also makes its skill shot generous), Orchard a trefoil (its cusps deflect the orbit), Tempest an ogee (with a narrow spire where the lightning rod sits), Rose a round arch around the great rose. Every window shares the same lower playfield so the flippers feel identical everywhere.
+- **Friction is Coulomb** (limited by the normal impulse). A fixed fraction per contact made balls riding round the arch lose most of their speed.
+- **Kickers jitter.** Slingshot and bumper kicks vary by ±10% and a few degrees; with identical kicks the autoplayer found a ball that ping-ponged between the slingshots forever.
+- **Skill shot.** Plunger strength decides where the ball leaves the arch, and the band that reaches the candles is narrow (about 60 ms of hold on Dawn), as on real tables. To make it learnable rather than luck, gilt marks on the lane show the band (measured per window by `tools/skill.mjs`), the plunger glows inside it, and the flippers move the lit candle while the ball is in the air.
+- **Tilt:** each nudge adds 1 to a meter that drains at 0.5 a second; a warning at 1.5, tilt at 2.5. In practice: two quick nudges warn, three tilt; one every couple of seconds never does.
+- **Ball save** lasts 9 seconds from the launch. A saved ball is re-plunged automatically.
+- **Ledges.** The headless autoplayer (`tools/bot.mjs`, `tools/stuck.mjs`) found spots where a ball could rest: on top of wall-side targets and drop banks, and in pockets behind the scoops. Every wall-side bank now has a small stone wedge above it, and both scoops are mouths cut into the wall with a sloped roof.
+- **Pilgrim's Return** lifts the ball to the top of the outlane and sends it inwards, rather than straight up (where it hit the wall-side targets and fell back in).
+- **The cellar** is a real chamber in the physics world below the drain, hidden under a stone slab until it opens; the camera follows the ball down and back up.
+- **Attract mode.** Behind the title, a wandering point of light ignites a window pane by pane, then it dims and the next window takes its place. On wide screens the menu stands to the left of the window, on tall screens below it.
+- **Arches in the UI** are drawn per panel at its real aspect ratio (so tracery never stretches): pointed arches for tall panels, four-centred arches for wide ones.
+- **HUD layout.** If the table leaves at least ~150 px either side, the HUD sits in side columns; otherwise in a band above the table.
+- **Music:** D Dorian (luminous rather than sad), 56 bpm, an eight-chord progression; each window is in its own key (Dawn D, Saints F, Orchard G, Tempest C, Rose D).
+- **Performance fallback.** If frames stay slow for a second and a half during play, the canvas pixel ratio drops (2 → 1.5 → 1), then the window layer's resolution.
+- **Tests use Vitest**, as the brief asked (the other games use `node --test`).
+- **Pushing:** see the README's Deployment section; the workflow needs Pages set to GitHub Actions once.

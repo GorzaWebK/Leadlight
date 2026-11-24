@@ -325,6 +325,7 @@ export class UI {
          <div class="row"><button class="btn small" data-act="settings">Settings</button><button class="btn small" data-act="help">How to play</button></div>
          <button class="btn small" data-act="quit">Leave for the menu</button>
        </div>`,
+      { cls: 'title-panel' },
     );
   }
 
@@ -380,6 +381,7 @@ export class UI {
          <button class="btn primary" data-act="again" data-autofocus>${r.againLabel}</button>
          <button class="btn small" data-act="menu">Menu</button>
        </div>`,
+      { cls: 'title-panel' },
     );
   }
 
@@ -500,7 +502,7 @@ export class UI {
       set('.hud-c', { right: '0.6em', top: `${band * 0.3}px`, transform: `scale(${scale})`, transformOrigin: 'top right' });
       set('.hud-d', { left: '50%', top: `${band - fs * 1.9 * scale}px`, transform: `translateX(-50%) scale(${scale})`, transformOrigin: 'top center' });
       set('.hud-btns', { right: '0.5em', top: '0.4em', transform: `scale(${scale * 0.9})`, transformOrigin: 'top right' });
-      h.querySelector('.banner').style.top = `${band + 0.18 * (info.h - band)}px`;
+      h.querySelector('.banner').style.top = `${band + 0.06 * (info.h - band)}px`;
     } else {
       const lw = info.tl;
       const rw = info.w - info.tr;
@@ -515,6 +517,8 @@ export class UI {
   }
 
   setWindow(def, relics) {
+    clearTimeout(this.bannerT);
+    this.hud.banner.classList.remove('show');
     this.hud.num.textContent = def.numeral;
     this.hud.name.textContent = def.name;
     this.hud.winRibbon.querySelector('svg').outerHTML = ribbonSVG(introColour(def));

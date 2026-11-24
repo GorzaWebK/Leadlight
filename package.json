@@ -8,7 +8,11 @@
     "dev": "vite --host",
     "build": "vite build",
     "preview": "vite preview --host",
-    "test": "vitest run"
+    "test": "vitest run",
+    "feel": "node tools/feel.mjs",
+    "skill": "node tools/skill.mjs",
+    "bot": "node tools/bot.mjs",
+    "stuck": "node tools/stuck.mjs"
   },
   "devDependencies": {
     "vite": "^7.3.8",
