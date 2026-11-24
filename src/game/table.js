@@ -4,8 +4,8 @@ import { World, Flipper, seg, circle, chain } from '../physics/world.js';
 import { addPendulum, addRotor } from '../physics/bodies.js';
 import { lowerPlayfield, archWall, LANE_X, RIGHT, PLUNGER_REST_Y, TABLE_W, BALL_R } from '../tables/common.js';
 
-const RAIL = { e: 0.45, f: 0.03, r: 3 };
-const STONE = { e: 0.42, f: 0.04 };
+const RAIL = { e: 0.45, f: 0.06, r: 3 };
+const STONE = { e: 0.42, f: 0.08 };
 
 function normalOf(a, b, towards) {
   // Unit normal of segment a-b, pointing towards the given point.
@@ -24,7 +24,7 @@ function normalOf(a, b, towards) {
 }
 
 export function buildTable(def, mods = {}) {
-  const world = new World({ gravity: 1500 * (mods.gravity ?? 1), bounds: { x0: -120, y0: -120, x1: 760, y1: 1500 } });
+  const world = new World({ rand: mods.rand, gravity: 1500 * (mods.gravity ?? 1), bounds: { x0: -120, y0: -120, x1: 760, y1: 1500 } });
   const L = lowerPlayfield();
   const T = {
     def,

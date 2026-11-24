@@ -10,8 +10,8 @@ import { PLUNGER_X, DRAIN_Y, BALL_R, LANE_X, LANE_TOP, RIGHT } from '../tables/c
 import { pointInPane } from '../tables/panes.js';
 
 export const BALL_SAVE_SECONDS = 9;
-export const TILT_WARN = 1.6;
-export const TILT_LIMIT = 2.8;
+export const TILT_WARN = 1.5;
+export const TILT_LIMIT = 2.5;
 export const TILT_DECAY = 0.5; // per second
 
 // How many hits of each kind light one pane, and how many panes a hit lights.
@@ -49,7 +49,7 @@ export class Game {
     this.mode = o.mode || 'run';
     this.mods = { ...DEFAULT_MODS, ...(o.mods || {}) };
     this.rand = o.rand || Math.random;
-    this.T = buildTable(this.def, this.mods);
+    this.T = buildTable(this.def, { ...this.mods, rand: this.rand });
     this.world = this.T.world;
     this.panes = this.def.panes;
     this.light = new WindowLight(this.panes);
@@ -148,7 +148,7 @@ export class Game {
       if (this.autoPlunge <= 0) this.release(0.78 + this.rand() * 0.06);
     } else if (this.input.plunger && P.vy === 0) {
       if (P.pull === 0) this.emit({ type: 'pull' });
-      P.pull = Math.min(1, P.pull + h / 0.9);
+      P.pull = Math.min(1, P.pull + h / 1.1);
     } else if (!this.input.plunger && P.pull > 0 && P.vy === 0) {
       this.release(P.pull);
     }
@@ -160,7 +160,7 @@ export class Game {
 
   release(power) {
     const P = this.T.plunger;
-    P.vy = -(650 + power * 2350);
+    P.vy = -(700 + power * 2150);
     P.pull = 0;
     this.emit({ type: 'plunge', power });
   }
@@ -767,6 +767,7 @@ export class Game {
       // Leaving the shooter lane.
       if (!b.launched && b.y < LANE_TOP - 46 && b.x > LANE_X - 30) {
         b.launched = true;
+        b.launchedAt = this.time;
         b.skill = !b.extra;
         if (this.T.gate) this.T.gate.open = 1;
         if (this.phase === 'ready') this.phase = 'play';

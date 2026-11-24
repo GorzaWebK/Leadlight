@@ -24,7 +24,7 @@ function base(o) {
   return {
     id: nextId++,
     e: o.e ?? 0.45, // restitution
-    f: o.f ?? 0.04, // tangential friction per contact (0..1)
+    f: o.f ?? 0.08, // Coulomb friction coefficient
     kick: o.kick ?? 0, // outward speed given by an active surface
     kickMin: o.kickMin ?? 70, // impact speed (along the normal) needed to fire the kick
     kickNormal: o.kickNormal || null, // only kick when hit on this side (slingshot face)
@@ -97,7 +97,7 @@ export class Flipper {
     this.upSpeed = o.upSpeed ?? 24;
     this.downSpeed = o.downSpeed ?? 16;
     this.e = o.e ?? 0.3;
-    this.f = o.f ?? 0.02;
+    this.f = o.f ?? 0.12;
     this.angle = this.rest;
     this.w = 0;
     this.pressed = false;
@@ -165,6 +165,7 @@ export class World {
     this.grid = null;
     this.bounds = o.bounds || { x0: -200, y0: -200, x1: 900, y1: 1600 };
     this.lastSubsteps = 1;
+    this.rand = o.rand || Math.random; // jitter for kickers, so no two kicks are identical
   }
 
   addStatic(c) {
@@ -390,13 +391,26 @@ export class World {
     let kicked = false;
     if (c.kick && fresh && -vn > c.kickMin) {
       if (!c.kickNormal || nx * c.kickNormal.x + ny * c.kickNormal.y > 0.5) {
-        out = Math.max(out, c.kick);
+        out = Math.max(out, c.kick * (0.9 + this.rand() * 0.2));
         kicked = true;
       }
     }
-    const keep = 1 - c.f;
-    const nvx = svx + tx * keep + nx * out;
-    const nvy = svy + ty * keep + ny * out;
+    // Coulomb friction: the tangential change is limited by the normal impulse, so a
+    // ball rolling round a curve keeps its speed and a hard hit grips.
+    const vt = Math.hypot(tx, ty);
+    const keep = vt > 1e-9 ? Math.max(0, vt - c.f * (out - vn)) / vt : 0;
+    let nvx = svx + tx * keep + nx * out;
+    let nvy = svy + ty * keep + ny * out;
+    if (kicked) {
+      // A few degrees of scatter on every kick.
+      const a = (this.rand() - 0.5) * 0.12;
+      const ca = Math.cos(a);
+      const sa = Math.sin(a);
+      const kx = nvx - svx;
+      const ky = nvy - svy;
+      nvx = svx + kx * ca - ky * sa;
+      nvy = svy + kx * sa + ky * ca;
+    }
     const jx = nvx - b.vx;
     const jy = nvy - b.vy;
     b.vx = nvx;
