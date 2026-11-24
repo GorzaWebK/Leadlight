@@ -407,6 +407,8 @@ input.on('any', () => {
   }
 });
 input.zoneAt = (x, y) => renderer.zoneAt(x, y);
+// Sound may only start inside a user gesture: unlock on the first tap, click or key anywhere.
+for (const ev of ['pointerdown', 'touchend', 'keydown']) window.addEventListener(ev, () => audio.unlock(), { capture: true, passive: true });
 
 // ---------- Layout ----------
 
@@ -502,6 +504,7 @@ window.leadlight = {
   },
   renderer,
   store,
+  audio,
   action,
   startSingle,
   startRun,
