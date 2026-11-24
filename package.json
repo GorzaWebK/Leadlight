@@ -1,0 +1,21 @@
+{
+  "name": "leadlight",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A pinball roguelite inside a stained-glass rose window: light every pane with a drop of molten light",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview --host",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "vite": "^7.3.8",
+    "vitest": "^3.2.7"
+  },
+  "dependencies": {
+    "@fontsource/cormorant-garamond": "^5.3.0",
+    "@fontsource/spectral": "^5.3.0"
+  }
+}
