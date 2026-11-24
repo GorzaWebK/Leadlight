@@ -294,6 +294,7 @@ export class Renderer {
     g.drawImage(this.glass.bloom, R.x0, R.y0, R.x1 - R.x0, R.y1 - R.y0);
     g.restore();
     this.fx.drawGlass(g);
+    if (this.def.cellar) this.drawCellarVeil(g, dt);
     // The flood when a window completes.
     if (this.flood > 0.01) {
       g.save();
@@ -336,6 +337,24 @@ export class Renderer {
       g.fillStyle = 'rgba(30,0,20,0.25)';
       g.fillRect(0, 0, this.cssW, this.cssH);
     }
+  }
+
+  /** The cellar stays hidden under a stone slab until its door opens. */
+  drawCellarVeil(g, dt) {
+    const T = this.T;
+    const open = T && (T.scoop?.open || T.cellar?.active || T.cellar?.held);
+    this.veil = this.veil ?? 1;
+    this.veil += ((open ? 0 : 1) - this.veil) * Math.min(1, dt * 2);
+    if (this.veil < 0.02) return;
+    const { x0, y0, x1, y1 } = this.def.cellar.rect;
+    if (!this.wallPattern) this.wallPattern = g.createPattern(masonryTile(), 'repeat');
+    g.save();
+    g.globalAlpha = this.veil;
+    g.fillStyle = this.wallPattern;
+    g.fillRect(x0 - 12, y0 - 2, x1 - x0 + 24, y1 - y0 + 14);
+    g.fillStyle = 'rgba(8,6,16,0.35)';
+    g.fillRect(x0 - 12, y0 - 2, x1 - x0 + 24, y1 - y0 + 14);
+    g.restore();
   }
 
   makeVignette() {

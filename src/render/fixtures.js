@@ -28,6 +28,8 @@ export class FixtureArt {
     this.opts = opts;
     const pal = T.def.palette;
     this.jewels = [pal[1], pal[3], pal[0], pal[2], pal[4] || pal[0]];
+    // Small carved corbels (wedges above wall-side targets).
+    this.corbels = T.walls.filter((w) => w.kind === 'corbel').map((w) => w.pts);
     // One path for all rails.
     this.rails = new Path2D();
     for (const w of T.walls) {
@@ -38,6 +40,7 @@ export class FixtureArt {
 
   draw(g, time) {
     const T = this.T;
+    for (const pts of this.corbels) this.corbel(g, pts);
     this.drawRails(g);
     this.drawSlings(g);
     for (const p of T.posts) this.post(g, p.x, p.y, p.r ?? 6);
@@ -54,7 +57,7 @@ export class FixtureArt {
     if (T.cellar) this.cellar(g, T.cellar);
     for (const k of T.kickbacks) this.kickback(g, k, time);
     if (T.centrePost) this.centrePost(g, T.centrePost);
-    this.plunger(g, T.plunger);
+    this.plunger(g, T.plunger, T.def.skillPull, time);
     this.gate(g, T.gate);
     for (const f of T.flippers) this.flipper(g, f);
   }
@@ -76,6 +79,27 @@ export class FixtureArt {
     g.translate(-0.8, -0.8);
     g.stroke(this.rails);
     g.restore();
+  }
+
+  corbel(g, pts) {
+    const [a, b] = pts;
+    const wallX = Math.abs(a[0] - 20) < 2 || Math.abs(a[0] - 578) < 2 ? a[0] : b[0];
+    g.beginPath();
+    g.moveTo(a[0], a[1]);
+    g.lineTo(b[0], b[1]);
+    g.lineTo(wallX, b[1] + 6);
+    g.closePath();
+    const gr = g.createLinearGradient(a[0], a[1], b[0], b[1]);
+    gr.addColorStop(0, '#5a5084');
+    gr.addColorStop(1, '#2a2446');
+    g.fillStyle = gr;
+    g.fill();
+    g.strokeStyle = '#6a5f98';
+    g.lineWidth = 2;
+    g.beginPath();
+    g.moveTo(a[0], a[1]);
+    g.lineTo(b[0], b[1]);
+    g.stroke();
   }
 
   post(g, x, y, r) {
@@ -536,7 +560,16 @@ export class FixtureArt {
     glowAt(g, C.x, C.y, 60, '#c0b0ff', 0.3 * C.up);
   }
 
-  plunger(g, P) {
+  plunger(g, P, band, time) {
+    if (band) {
+      // A gilt notch on the lane wall marks the pull that reaches the candles.
+      const y0 = P.rest + band[0] * 42;
+      const y1 = P.rest + band[1] * 42;
+      g.fillStyle = rgba(STONE.gilt, 0.75);
+      g.fillRect(P.x0 - 5, y0 + 4, 4, y1 - y0 + 2);
+      g.fillRect(P.x1 + 1, y0 + 4, 4, y1 - y0 + 2);
+      if (P.pull >= band[0] && P.pull <= band[1]) glowAt(g, (P.x0 + P.x1) / 2, P.y + 4, 90, '#bfe0ff', 0.7 + 0.3 * Math.sin(time * 20));
+    }
     const x0 = P.x0 + 4;
     const x1 = P.x1 - 4;
     const cx = (x0 + x1) / 2;

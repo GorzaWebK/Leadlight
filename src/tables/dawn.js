@@ -14,6 +14,7 @@ export default {
   palette: ['#e08a16', '#c82a52', '#e8b030', '#2c4fc0', '#e2602e', '#efcf86'],
   sky: '#f2a24a', // the light behind the glass
   arch,
+  skillPull: [0.44, 0.5], // plunger band that reaches the top lanes (tools/skill.mjs)
   outline: glassOutline(arch),
   bumpers: [
     { x: 226, y: 400 },
@@ -38,8 +39,8 @@ export default {
   ],
   spinners: [{ x: 50, y: 470, len: 56, angle: 0 }],
   targets: [
-    { a: [34, 585], b: [34, 625], set: 'left' },
-    { a: [34, 640], b: [34, 680], set: 'left' },
+    { a: [34, 570], b: [34, 610], set: 'left' },
+    { a: [34, 625], b: [34, 665], set: 'left' },
   ],
   drops: [
     { a: [562, 505], b: [562, 537], bank: 'right' },
@@ -47,6 +48,10 @@ export default {
     { a: [562, 595], b: [562, 627], bank: 'right' },
   ],
   posts: [{ x: 120, y: 290, r: 6 }, { x: 478, y: 290, r: 6 }],
+  stones: [
+    [[20, 548], [38, 566]],
+    [[578, 483], [558, 501]],
+  ],
   bankText: 'Matins rung',
   glass: [
     {

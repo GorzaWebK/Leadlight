@@ -17,3 +17,11 @@ for (let hold = 0.3; hold <= 1.1; hold += 0.01) {
   res.push(lane);
 }
 console.log('hold 0.30..1.10 step .01:\n' + res.join(''));
+// The longest run of lane entries, as a plunger pull band.
+let best = [0, 0], cur = null;
+res.forEach((c, i) => {
+  if (/\d/.test(c)) { if (!cur) cur = [i, i]; cur[1] = i; if (cur[1] - cur[0] > best[1] - best[0]) best = [...cur]; }
+  else cur = null;
+});
+const toPull = (i) => Math.min(1, (0.3 + i * 0.01) / 1.1);
+console.log('skillPull:', [toPull(best[0]).toFixed(3), toPull(best[1] + 1).toFixed(3)]);

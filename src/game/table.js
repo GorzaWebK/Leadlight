@@ -75,7 +75,7 @@ export function buildTable(def, mods = {}) {
     T.posts.push(p);
   }
   for (const r of def.rails || []) wall(r, 'rail', RAIL);
-  for (const r of def.stones || []) wall(r, 'stone', STONE);
+  for (const r of def.stones || []) wall(r, 'corbel', STONE);
 
   // Slingshots.
   for (const s of L.slings) {
@@ -221,7 +221,7 @@ export function buildTable(def, mods = {}) {
 
   // The hidden cellar (a separate chamber below the table).
   if (def.cellar) {
-    const C = { ...def.cellar, pegs: [], cup: null, active: false };
+    const C = { ...def.cellar, pegs: [], active: false, held: null };
     for (const w of def.cellar.walls) wall(w, 'cellar', { e: 0.5, f: 0.03 });
     for (const p of def.cellar.pegs) {
       const Pg = { ...p, flash: 0 };

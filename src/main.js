@@ -10,7 +10,8 @@ const input = new Input(canvas, null);
 input.playing = true;
 input.zoneAt = (x, y) => renderer.zoneAt(x, y);
 
-let game = new Game({ table: TABLES[0], mode: 'single', balls: 3 });
+const pick = () => TABLES.find((t) => t.id === new URLSearchParams(location.search).get('table')) || TABLES[0];
+let game = new Game({ table: pick(), mode: 'single', balls: 3 });
 renderer.setGame(game);
 
 function resize() {
@@ -30,7 +31,7 @@ function loop(now) {
   renderer.handle(game.drainOut());
   renderer.frame(dt);
   if (game.phase === 'over') {
-    game = new Game({ table: TABLES[0], mode: 'single', balls: 3 });
+    game = new Game({ table: pick(), mode: 'single', balls: 3 });
     renderer.setGame(game);
   }
   requestAnimationFrame(loop);
