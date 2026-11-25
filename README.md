@@ -1,14 +1,37 @@
-# Leadlight
+<div align="center">
 
-A pinball roguelite inside a giant stained-glass rose window at dusk: you are a drop of molten light, and every hit sends light running along the lead to set the dark glass glowing.
+<img src="docs/media/window-timelapse.gif" width="320" alt="Leadlight: a whole window lighting up, sped up">
 
-**Play:** https://gorzawebk.github.io/Leadlight/
+# ✧ L e a d l i g h t ✧
 
-Plays on PC (keyboard or gamepad) and on phones and tablets (touch, best held upright). Everything is made in code: the glass, the stone, the light shafts and dust, the favicon, the music and every sound. There are no image or audio files.
+### *A pinball roguelite inside a giant stained-glass rose window at dusk.*
+
+<a href="https://gorzawebk.github.io/Leadlight/"><img src="https://img.shields.io/badge/Enter-play%20now-6B2D8C?style=for-the-badge" alt="Enter: play now"></a>
+<img src="https://img.shields.io/badge/Genre-pinball%20roguelite-B8860B?style=for-the-badge" alt="Genre: pinball roguelite">
+<img src="https://img.shields.io/badge/Input-keyboard%20·%20gamepad%20·%20touch-2E3A59?style=for-the-badge" alt="Input: keyboard · gamepad · touch">
+<img src="https://img.shields.io/badge/Built%20with-vanilla%20JS-1E1E2E?style=for-the-badge&logo=javascript&logoColor=white" alt="Built with: vanilla JS">
+
+<sub>▲ A whole window, from dark glass to fully lit, sped up. Recorded in the browser.</sub>
+
+✦ ─────────── ✧ ─────────── ✦
+
+</div>
+
+You are a drop of molten light, and every hit sends light running along the lead to set the dark glass glowing.
+
+Plays on PC (keyboard or gamepad) and on phones and tablets (touch, best held upright). Everything in the game is made in code: the glass, the stone, the light shafts and dust, the favicon, the music and every sound. The game itself loads no image or audio files (the pictures on this page are only screenshots).
 
 *"Leadlight" is a working title.*
 
-## Controls
+## ✧ I. The glass
+
+<table>
+<tr><td align="center" valign="top"><img src="docs/media/title.jpg" width="270" alt="The nave at dusk"><br><sub>The nave at dusk</sub></td><td align="center" valign="top"><img src="docs/media/pinball.gif" width="200" alt="Flippers, ball and glass"><br><sub>Flippers, ball and glass</sub></td><td align="center" valign="top"><img src="docs/media/window-lit.jpg" width="270" alt="Every pane alight"><br><sub>Every pane alight</sub></td></tr>
+</table>
+
+<div align="center"><img src="docs/media/window-complete.jpg" width="560" alt="The window is lit"><br><sub>The window is lit.</sub></div>
+
+## ✧ II. Controls
 
 | Input | Keyboard | Touch | Gamepad |
 | --- | --- | --- | --- |
@@ -21,7 +44,7 @@ Plays on PC (keyboard or gamepad) and on phones and tablets (touch, best held up
 
 Every key can be rebound in **Settings** (three keys per action, saved on the device). Menus work with the arrow keys and Enter, the d-pad and A/B, or touch.
 
-## How to play
+## ✧ III. How to play
 
 The table **is** the window. Black lead lines (the came) divide it into glass panes that start dark. Every bumper, slingshot, target, lane, spinner and bell you hit sends a spark along the lead to the nearest dark panes, which ignite in ruby, cobalt, emerald, amber or violet. **Light every pane to finish the window.** The little rose in the HUD fills as you go.
 
@@ -70,7 +93,7 @@ Sixteen relics. Ten are available from the start; the rest are found by playing.
 | Censer | Combos last 60% longer and climb to ×4 | |
 | St Christopher's Medal | Far stronger nudges, twice the tilt tolerance | |
 
-## Look and feel
+## ✧ IV. Look and feel
 
 - **The window.** Each window's glass is cut in code from a design of zones: rose rings, lancet panels, diamond quarries, honeycomb and slanted "rain" panes. Every pane has its own tone, a radial gradient for uneven thickness, streaks, mottling and seed bubbles from a generated glass texture, and darker glass at its edges. The lead is drawn with a slight hand-made wobble, solder blobs at the joints and a dull sheen.
 - **Light.** Dark panes keep a faint dusk tint, so you can see the design before it's lit. A hit sends a spark along the lead (the shortest path through the lead network), and the pane ignites with a bloom, a ripple and the lead around it glowing gold. A blurred copy of the glass is added back over everything, so lit glass bleeds light across the came. Shafts of dusk light fall through the window with dust drifting in them, brighter as the window fills. The ball is molten light with a short glowing trail.
@@ -80,7 +103,7 @@ Sixteen relics. Ten are available from the start; the rest are found by playing.
 - **Type:** Cormorant Garamond for titles and numerals, Spectral for reading. Both are bundled through Fontsource, so they work offline and inside iframes.
 - **Palette:** stone `#0b0918` `#211c38` `#3d355f`, lead `#0a0910`, gilt `#d9b56a`, and jewel glass: ruby `#c8203f`, cobalt `#2448c8`, emerald `#14915a`, amber `#e89a1c`, violet `#7a3cc4`.
 
-## Sound
+## ✧ V. Sound
 
 All synthesised live with the Web Audio API, through a generated four-second cathedral reverb:
 
@@ -91,15 +114,15 @@ All synthesised live with the Web Audio API, through a generated four-second cat
 
 Sound starts after the first tap, click or key press, and pauses with the game when the tab is hidden.
 
-## Settings
+## ✧ VI. Settings
 
 Music and effects volume, mute, **reduced motion** (no screen shake or flashes; follows the system setting until changed), **high-contrast lead** (thicker lead lines and rails with a light outline), **colour-blind markings** (each glass colour gets its own pattern once lit) and key bindings. Best scores, settings, keys, stats and found relics are saved in `localStorage` (wrapped in try/catch, with an in-memory fallback).
 
-## Embedding
+## ✧ VII. Embedding
 
 The game fills whatever box it's placed in (`#game` is 100% × 100% of its container, a `ResizeObserver` resizes the canvas, and the menus and HUD scale with container-query units). On wide boxes the HUD sits beside the table; on tall ones above it. It works in a page or an iframe: keys only act while the game has focus (and then don't scroll the host page), sound starts on the first click, and the game pauses itself when the tab is hidden or focus leaves it.
 
-## How it's built
+## ✧ VIII. How it's built
 
 - Plain JavaScript modules and [Vite](https://vite.dev). No framework and no physics library. Canvas 2D.
 - **Physics** (`src/physics/`): a fixed 120 Hz step, split into substeps so that no ball and no moving surface (a flipper tip, the rosette, a bell, the plunger) travels more than a third of the ball's radius per substep. Contacts are found while the ball's centre is still well outside the surface, so even a zero-thickness wall can't be tunnelled through. Capsules, circles, tapered flippers with surface velocity, one-way gates, sensors, pendulums and rotors, Coulomb friction, jittered kickers (so slingshots can't lock into a loop), and a broad-phase grid.
@@ -145,7 +168,7 @@ The brief left some details open; these are the choices made (more in [DESIGN.md
 - **The cellar** is a real chamber in the physics world below the table; the camera follows the ball down and back.
 - The autoplayer (`npm run bot`) found ledges where a ball could rest; every wall-side bank now has a small stone wedge above it, and both scoops are cut into the walls.
 
-## Running locally
+## ✧ IX. Running locally
 
 ```bash
 npm install
@@ -157,6 +180,16 @@ npm run preview
 
 Helpers: `npm run bot -- rose 4` (autoplayer stats for a window), `npm run skill -- saints` (which plunger pull reaches the candles), `npm run stuck -- orchard` (where balls get stuck). In the browser console, `window.leadlight` gives you the `game`, the `run`, the `renderer`, `startSingle(id)` and `startRun()`.
 
-## Deployment
+## ✧ X. Deployment
 
 Every push to `main` runs the tests, builds the game and publishes it to GitHub Pages via `.github/workflows/deploy.yml`. Vite's `base` is `'./'`, so the build works at `https://<user>.github.io/Leadlight/`, in any subfolder and inside an iframe. One-time setup: in the repository's **Settings → Pages**, set **Source** to **GitHub Actions**.
+
+---
+
+<div align="center">
+
+✦ ─────────── ✧ ─────────── ✦
+
+*Light the glass. Pane by pane.*
+
+</div>
